@@ -2,49 +2,56 @@ import './App.css';
 import foodsJSON from './foods.json';
 import { useState } from 'react';
 import FoodBox from './Components/FoodBox/FoodBox';
-import { Card, Row, Col, Divider, Input, Button } from 'antd';
+import { Row, Divider, Button } from 'antd';
 import AddFoodForm from './Components/AddFoodForm/AddFoodForm';
-import Search from 'antd/lib/transfer/search';
+import Search from './Components/Search/Search';
 
 
 function App() {
   const [foodList, setFoodList] = useState(foodsJSON)
-  const [foodListData, setFoodListData] = useState(foodsJSON);
+  const [showForm, setShowForm] = useState(true);
+
+
+  const deleteFood = (foodName) => {
+    const removedFood = foodList.filter((ele) => {
+      return ele.name !== foodName;
+    });
+    setFoodList(removedFood);
+  };
+
+  const toggleShow = () => {
+    setShowForm(!showForm);
+    console.log(showForm);
+  };
 
   const addNewFood = (newFood) => {
     const updatedFoodList = [...foodList, newFood];
-    const updatedFoodListData = [...foodListData, newFood];
-
-    setFoodListData(updatedFoodListData);
     setFoodList(updatedFoodList);
   };
 
   const searchFilter = (searchQuery) => {
-    let filteredFoods = foodsJSON.filter((food) =>
-      food.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+    let filteredFoods = foodList.filter((dish) =>
+      dish.name.toLowerCase().startsWith(searchQuery.toLowerCase())
     );
-    console.log(filteredFoods);
     setFoodList(filteredFoods);
   };
-
-  
+ 
   return <div className="App">
-    <Row>
-      <AddFoodForm addFood={addNewFood} />
-    </Row>
-    <Row>
-      <Search search={searchFilter} />
-    </Row>
-    <Divider>List</Divider>
-    <Row >
-    {foodList.map((food) => {
-    return <FoodBox food={food} />;
-      
-    })
-    }
-    
+      {showForm &&
+      <AddFoodForm addFood={addNewFood} />}
 
-    </Row>
+      <Button onClick={toggleShow} > {showForm ? 'Hide Form' : 'Add New Food'} </Button>
+
+      <Search menu={searchFilter} />
+
+      <Divider>Food List</Divider>
+
+      <Row style={{ width: '100%', justifyContent: 'center' }}>
+      {foodList.map((food) => {
+        return <FoodBox food={food} deleteFood={deleteFood}/>;
+        })
+      }
+      </Row>
   </div>;
   
 }

@@ -1,5 +1,5 @@
 import { Divider, Input } from 'antd';
-import { useState } from 'react';
+import React, {useState} from 'react';
 
 // Iteration 5
 function Search(props) {
@@ -7,8 +7,8 @@ function Search(props) {
 
     const handleChange = (e) => {
         setSearch(e.target.value);
-        props.search(e.target.value);
-        console.log(e);
+        props.menu(e.target.value);
+        console.log(e.target.value);
       };
 
 
@@ -17,7 +17,7 @@ function Search(props) {
       <Divider>Search</Divider>
 
       <label>Search</label>
-      <Input value={search} type="text" onChange={handleChange} />
+      <Input value={search} type="text" onChange={ (e)=> {handleChange(e)} } />
     </>
   );
 }
